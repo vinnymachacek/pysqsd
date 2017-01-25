@@ -12,8 +12,6 @@ def main():
     logger = logging.getLogger(__name__)
     logger.setLevel(logging.INFO)
 
-    AWS_ACCESS_KEY = os.environ['AWS_ACCESS_KEY_ID']
-    AWS_SECRET_KEY = os.environ['AWS_SECRET_KEY']
     SQS_QUEUE = os.environ['SQS_QUEUE']
     SQS_REGION = os.environ['SQS_REGION'] if 'SQS_REGION' in os.environ else 'us-east-1'
     SQS_READ_TIMEOUT = os.environ['SQS_READ_TIMEOUT'] if 'SQS_READ_TIMEOUT' in os.environ else None
@@ -21,10 +19,7 @@ def main():
     WORKER_PATH = os.environ['WORKER_PATH'] if 'WORKER_PATH' in os.environ else '/'
     SQS_SLEEP = os.environ['SQS_SLEEP'] if 'SQS_SLEEP' in os.environ else 5
 
-    sqs_connection = boto.sqs.connect_to_region(
-         SQS_REGION,
-         aws_access_key_id=AWS_ACCESS_KEY,
-         aws_secret_access_key=AWS_SECRET_KEY)
+    sqs_connection = boto.sqs.connect_to_region(SQS_REGION)
     q = sqs_connection.get_queue(SQS_QUEUE)
     visibility_timeout = q.get_timeout() if SQS_READ_TIMEOUT == None else SQS_READ_TIMEOUT
     logger.info("started")
